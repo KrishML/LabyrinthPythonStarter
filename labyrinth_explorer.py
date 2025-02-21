@@ -20,7 +20,7 @@ def dijkstra(labyrinth):
     # Constants for readability
     INFINITY = float('inf')
     movements = [(-1, 0), (1, 0), (0, -1), (0, 1)]  # Allowed movement directions
-    costs = {'.': 1, 'S': 1, 'E': 1, '*': 0, 'M': 5, '#': 10000000}
+    costs = {'.': 1, 'S': 1, 'E': 1, '*': 0, 'M': 5, '#': INFINITY}
 
     def get_position(graph, target):
         """Find the position of a target element ('S', 'E') in the graph."""
@@ -35,7 +35,7 @@ def dijkstra(labyrinth):
     # Get the start and end positions
     start_position = get_position(graph, 'S')
     end_position = get_position(graph, 'E')
-    print(start_position, end_position)  # Debugging print
+    # print(start_position, end_position)  # Debugging print
 
     # Priority queue for Dijkstra's algorithm
     pq = [(0, start_position)]
@@ -45,11 +45,14 @@ def dijkstra(labyrinth):
 
     # Dijkstra's algorithm main loop
     while pq:
-        print('Current priority queue:', pq)  # Debugging print
+        # print('Current priority queue:', pq)  # Debugging print
         current_cost, (x, y) = heapq.heappop(pq)
 
         if (x, y) == end_position:  # Stop when reaching the goal
             break
+
+        if (x, y) in visited:  # Skip already visited nodes
+            continue
 
         visited.add((x, y))  # Mark the current node as visited
         for dx, dy in movements:
@@ -73,20 +76,18 @@ def dijkstra(labyrinth):
     return path
 
 def print_path(labyrinth, path):
-    path_set = set(path)
-    for i in range(len(labyrinth)):
-        for j in range(len(labyrinth[i])):
-            if (i, j) in path_set:
-                print('>', end=' ')
-            else:
-                print(labyrinth[i][j], end=' ')
-        print()
-labyrinth = load_labyrinth("labyrinth_9x9.txt")
-print("Labyrinth loaded:")
-printlab(labyrinth)
-# labyrinth=convertlab(labyrinth)
-# printlab(labyrinth)
-path=dijkstra(labyrinth)
-print(path)
-print("Labyrinth with path:")
-print_path(labyrinth, path)
+    for x, y in path:
+        if labyrinth[x][y] not in ['S', 'E']:
+            labyrinth[x][y] = '>'
+    for row in labyrinth:
+        print(' '.join(row))
+
+
+if __name__ == "__main__":
+    labyrinth = load_labyrinth("labyrinth_9x9.txt")
+    print("Labyrinth loaded:")
+    printlab(labyrinth)
+    path=dijkstra(labyrinth)
+    # print(path)
+    print("Labyrinth with path:")
+    print_path(labyrinth, path)
