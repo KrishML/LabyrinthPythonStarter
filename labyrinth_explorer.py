@@ -10,20 +10,6 @@ def load_labyrinth(filename):
     labyrinth = [list(line.strip()) for line in lines]
     return labyrinth
 
-# def convertlab(labyrinth):
-#     for i in range(len(labyrinth)):
-#         for j in range(len(labyrinth[i])):
-#             if (labyrinth[i][j] == 'S'):
-#                 labyrinth[i][j] = 0
-#             elif (labyrinth[i][j] == '#'):
-#                 labyrinth[i][j] = 10000000
-#             elif (labyrinth[i][j] == '.'):
-#                 labyrinth[i][j] = 1
-#             elif (labyrinth[i][j] == '*'):
-#                 labyrinth[i][j] = 0
-#             elif (labyrinth[i][j] == 'M'):
-#                 labyrinth[i][j] = 5
-#     return labyrinth
 
 def printlab(labyrinth):
     for i in range(len(labyrinth)):
@@ -95,7 +81,15 @@ def dijkstra(labyrinth):
     path.reverse()
     return path
 
-
+def print_path(labyrinth, path):
+    path_set = set(path)
+    for i in range(len(labyrinth)):
+        for j in range(len(labyrinth[i])):
+            if (i, j) in path_set:
+                print('P', end=' ')
+            else:
+                print(labyrinth[i][j], end=' ')
+        print()
 labyrinth = load_labyrinth("labyrinth_5x5.txt")
 print("Labyrinth loaded:")
 printlab(labyrinth)
@@ -103,3 +97,5 @@ printlab(labyrinth)
 # printlab(labyrinth)
 path=dijkstra(labyrinth)
 print(path)
+print("Labyrinth with path:")
+print_path(labyrinth, path)
